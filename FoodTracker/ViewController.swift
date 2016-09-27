@@ -14,6 +14,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UIImagePickerContro
     @IBOutlet weak var mealNameLabel: UILabel!
     
     @IBOutlet weak var photoImageView: UIImageView!
+    @IBOutlet weak var ratingControl: RatingControl!
     
 
     override func viewDidLoad() {
@@ -25,10 +26,6 @@ class ViewController: UIViewController, UITextFieldDelegate, UIImagePickerContro
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
-    }
-
-    @IBAction func setDefaultLabelText(sender: UIButton) {
-        mealNameLabel.text = "Default Text"
     }
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
@@ -42,6 +39,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UIImagePickerContro
         mealNameLabel.text = textField.text
     }
     
+    //gesture recognizers can be found in the object library
     @IBAction func selectImageFromLibrary(sender: UITapGestureRecognizer) {
         nameTextField.resignFirstResponder()
         
