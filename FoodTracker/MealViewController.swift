@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  MealViewController.swift
 //  FoodTracker
 //
 //  Created by Sibrian on 9/26/16.
@@ -8,19 +8,31 @@
 
 import UIKit
 
-class ViewController: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class MealViewController: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     @IBOutlet weak var nameTextField: UITextField!
-    @IBOutlet weak var mealNameLabel: UILabel!
     
     @IBOutlet weak var photoImageView: UIImageView!
     @IBOutlet weak var ratingControl: RatingControl!
     
+    @IBOutlet weak var saveButton: UIBarButtonItem!
+    
+    var meal: Meal?
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         nameTextField.delegate = self
+        
+        if let meal = meal {
+            navigationItem.title = meal.name
+            nameTextField.text = meal.name
+            ratingControl.rating = meal.rating
+            photoImageView.image = meal.photo
+        }
+        
+        //enable save if meal name is valid ONLY
+        checkForValidMealName()
     }
 
     override func didReceiveMemoryWarning() {
@@ -34,13 +46,27 @@ class ViewController: UIViewController, UITextFieldDelegate, UIImagePickerContro
         return true
     }
     
-    //set the name label to what is in the text
     func textFieldDidEndEditing(textField: UITextField) {
-        mealNameLabel.text = textField.text
+        
+        checkForValidMealName()
+        navigationItem.title = textField.text
+    }
+    
+    func textFieldDidBeginEditing(textField: UITextField) {
+        
+        saveButton.enabled = false
+    }
+    
+    func checkForValidMealName() {
+        
+        //save button remains disabled for empty string
+        let text = nameTextField.text ?? ""
+        saveButton.enabled = !text.isEmpty
     }
     
     //gesture recognizers can be found in the object library
     @IBAction func selectImageFromLibrary(sender: UITapGestureRecognizer) {
+        
         nameTextField.resignFirstResponder()
         
         //specify an image picker controller
@@ -56,6 +82,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UIImagePickerContro
     }
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
+        
         dismissViewControllerAnimated(true, completion: nil)
     }
     
@@ -68,6 +95,33 @@ class ViewController: UIViewController, UITextFieldDelegate, UIImagePickerContro
         
         dismissViewControllerAnimated(true, completion: nil)
     }
+    
+    // MARK: Navigation
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
+        if saveButton === sender {
+            let name = nameTextField.text ?? ""     //return text if it has, return empty string otherwise
+            let rating = ratingControl.rating
+            let photo = photoImageView.image
+            
+            //set the meal
+            meal = Meal(name: name, rating: rating, photo: photo)
+        }
+    }
+    
+    @IBAction func cancel(sender: UIBarButtonItem) {
+        
+        //check to see if the current view controller is of type UINavigationController
+        //if the add button was pressed, the UINavigationController presents the new scene
+        let isPresentingInAddMealMode = presentingViewController is UINavigationController
+        
+        if isPresentingInAddMealMode {
+            dismissViewControllerAnimated(true, completion: nil)
+        } else {
+            navigationController!.popViewControllerAnimated(true)
+        }
+    }
+    
     
     
 
