@@ -132,7 +132,7 @@ class MealTableViewController: UITableViewController {
             //grab the cell that calls the segue
             if let selectedMealCell = sender as? MealTableViewCell {
                 let indexPath = tableView.indexPathForCell(selectedMealCell)!   //grab the index of the table view
-                let selectedMeal = meals[indexPath.row]             //using that index, grab the cporresponding meal
+                let selectedMeal = meals[indexPath.row]             //using that index, grab the corresponding meal
                 mealDetailViewController.meal = selectedMeal        //assign the Meal to the meal property in the new VC
             }
             
